@@ -40,6 +40,7 @@ packer.init {
 }
 
 return packer.startup(function(use)
+    use "antoinemadec/FixCursorHold.nvim"
     use "wbthomason/packer.nvim" -- Have packer manage itself
     use "nvim-lua/popup.nvim" -- An implementation of the Popup API from vim in Neovim
     use "nvim-lua/plenary.nvim" -- Useful lua functions used ny lots of plugins
@@ -56,7 +57,8 @@ return packer.startup(function(use)
     }
 
     -- autosave
-    use "Pocco81/AutoSave.nvim"
+    use "Pocco81/auto-save.nvim"
+    use "djoshea/vim-autoread"
 
     -- configure lsp
     use "neovim/nvim-lspconfig" -- Collection of configurations for the built-in LSP client
@@ -133,8 +135,17 @@ return packer.startup(function(use)
     use "folke/which-key.nvim"
 
     -- unit test
-    use "vim-test/vim-test"
-    use { "rcarriga/vim-ultest", requires = { "vim-test/vim-test" }, run = ":UpdateRemotePlugins" }
+    -- use "vim-test/vim-test"
+    use "nvim-neotest/neotest-go"
+    use {
+        "nvim-neotest/neotest",
+        requires = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+            "antoinemadec/FixCursorHold.nvim",
+            "nvim-neotest/neotest-go",
+        }
+    }
 
     -- dashboard
     use "goolord/alpha-nvim"
@@ -147,7 +158,9 @@ return packer.startup(function(use)
 
     -- notify
     use "rcarriga/nvim-notify"
-
-    -- code runner
-    use { 'michaelb/sniprun', run = 'bash ./install.sh' }
+    use {
+        "folke/trouble.nvim",
+        requires = "kyazdani42/nvim-web-devicons",
+    }
+    use "nvim-telescope/telescope-ui-select.nvim"
 end)

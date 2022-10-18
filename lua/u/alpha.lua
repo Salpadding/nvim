@@ -1,3 +1,4 @@
+-- alpha 启动界面
 local ok, alpha = pcall(require, "alpha")
 
 if not ok then

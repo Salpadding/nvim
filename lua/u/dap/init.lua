@@ -1,4 +1,4 @@
-local ok, dap, ui, vt, ul
+local ok, dap, ui, vt
 
 ok, dap = pcall(require, "dap")
 
@@ -16,8 +16,17 @@ if not ok then
 end
 
 ui.setup({
-    sidebar = {
-        position = "right"
+    layouts = {
+        {
+            elements = { "scopes", "breakpoints", "stacks", "watches" },
+            position = "right",
+            size = 40,
+        },
+        {
+            elements = { "repl", "console" },
+            position = "bottom",
+            size = 10,
+        }
     }
 })
 
@@ -44,45 +53,45 @@ end
 
 require("u.dap.go")
 
-vim.g["test#go#gotest#options"] = "-v"
-vim.g["ultest_summary_mappings"] = {
-    jumpto = "l"
-}
-
-ok, ul = pcall(require, "ultest")
-
-if not ok then
-    print("vim-ultest not installed")
-    return
-end
-
-ul.setup(
-    {
-    builders = {
-        ["go#gotest"] = function(cmd)
-            local args = {}
-            for i = 3, #cmd - 1, 1 do
-                local arg = cmd[i]
-                if vim.startswith(arg, "-") then
-                    -- Delve requires test flags be prefix with 'test.'
-                    arg = "-test." .. string.sub(arg, 2)
-                end
-                args[#args + 1] = arg
-            end
-            return {
-                dap = {
-                    type = "go",
-                    request = "launch",
-                    mode = "test",
-                    program = string.match(vim.fn.expand("%"), "(.*[/\\])"),
-                    dlvToolPath = vim.fn.exepath("dlv"),
-                    args = args
-                },
-                parse_result = function(lines)
-                    return lines[#lines] == "FAIL" and 1 or 0
-                end
-            }
-        end
-    }
-}
-)
+-- vim.g["test#go#gotest#options"] = "-v"
+-- vim.g["ultest_summary_mappings"] = {
+--     jumpto = "l"
+-- }
+--
+-- ok, ul = pcall(require, "ultest")
+--
+-- if not ok then
+--     print("vim-ultest not installed")
+--     return
+-- end
+--
+-- ul.setup(
+--     {
+--     builders = {
+--         ["go#gotest"] = function(cmd)
+--             local args = {}
+--             for i = 3, #cmd - 1, 1 do
+--                 local arg = cmd[i]
+--                 if vim.startswith(arg, "-") then
+--                     -- Delve requires test flags be prefix with 'test.'
+--                     arg = "-test." .. string.sub(arg, 2)
+--                 end
+--                 args[#args + 1] = arg
+--             end
+--             return {
+--                 dap = {
+--                     type = "go",
+--                     request = "launch",
+--                     mode = "test",
+--                     program = string.match(vim.fn.expand("%"), "(.*[/\\])"),
+--                     dlvToolPath = vim.fn.exepath("dlv"),
+--                     args = args
+--                 },
+--                 parse_result = function(lines)
+--                     return lines[#lines] == "FAIL" and 1 or 0
+--                 end
+--             }
+--         end
+--     }
+-- }
+-- )

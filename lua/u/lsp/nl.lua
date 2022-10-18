@@ -5,6 +5,7 @@ end
 
 nl.setup({
     sources = {
-        nl.builtins.formatting.gofmt,
+        nl.builtins.formatting.goimports,
+        nl.builtins.diagnostics.golangci_lint,
     }
 })

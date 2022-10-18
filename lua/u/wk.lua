@@ -5,7 +5,9 @@ vim.cmd [[
     augroup sal_key_map
         autocmd!
         au VimEnter * :lua Sal("vim-enter")
-        au FileType * :lua Sal("file-type")
+        au FileType * :lua Sal("doMap1")
+        au BufNewFile,BufRead *.gop set filetype=go
+        au BufNewFile,BufRead gop.mod set filetype=gomod
     augroup end
 ]]
 
@@ -80,7 +82,7 @@ local alphas = (function()
 end)()
 
 
-local reg = function(tb, wkTb)
+local reg = function(tb, wkTb, opts)
     local max = 0
 
     for _, v in ipairs(tb) do
@@ -94,8 +96,11 @@ local reg = function(tb, wkTb)
         local x = { v.fn, desc }
         wkTb[v.key] = x
     end
-
-    wk.register(wkTb, { buffer = 0 })
+    local o = { buffer = 0 }
+    if opts ~= nil then
+        o = opts
+    end
+    wk.register(wkTb, o)
 end
 
 -- generate random keymaps for nvimtree
@@ -147,58 +152,15 @@ local dvf = function()
     end
 end
 
-local sh = function()
-    local i = 1
-    local mp = vim.api.nvim_buf_set_keymap
-    local maps =
-    {
-        { desc = "run selection", key = "r", fn = "<Plug>SnipRun", mode = "v" },
-        { desc = "run file", key = "r", fn = "<Plug>SnipRun", mode = "n" },
-    }
-
-    for _, v in ipairs(maps) do
-        mp(0, v.mode, v.key, v.fn, { noremap = true, silent = true, desc = v.desc })
-        i = i + 1
-    end
-end
-
-local doMap = function()
-    if vim.bo.filetype == "sh" then
-        sh()
-    end
-
-    if vim.bo.filetype == "NvimTree" then
-        nvimTree()
-        return
-    end
-
-    if vim.bo.filetype == "DiffviewFiles" then
-        dvf()
-        return
-    end
-
-    local i = 1
-    local maps = {}
-    local helps = {}
-    local fs = fns()
-
-    for _, v in ipairs(fs) do
-        if v.key == nil then
-            v.key = "<leader><space>" .. alphas:sub(i, i)
-            i = i + 1
-            helps[#helps + 1] = v
-        else
-            maps[#maps + 1] = v
-        end
-    end
-
-
-    local showHelps = function(opts)
+local doMap0 = function()
+    local maps = require("u.keys").fixed()
+    local showHelps = function()
         local pickers = require "telescope.pickers"
         local finders = require "telescope.finders"
         local conf = require("telescope.config").values
         local action_state = require "telescope.actions.state"
 
+        local helps = require("u.keys").helps()
         local max = 0
         for _, v in ipairs(helps) do
             if #v.group > max then
@@ -206,7 +168,13 @@ local doMap = function()
             end
         end
 
-        pickers.new(opts, {
+        pickers.new(tt.get_dropdown {
+            previewer = false,
+            layout_config = {
+                -- display as more items as possible
+                height = math.min(#helps + 4, vim.o.lines - 8),
+            }
+        }, {
             prompt_title = "helps",
             finder = finders.new_table {
                 results = helps,
@@ -220,7 +188,7 @@ local doMap = function()
                     }
                 end,
             },
-            sorter = conf.generic_sorter(opts),
+            sorter = conf.generic_sorter(),
             attach_mappings = function(prompt_bufnr)
                 actions.select_default:replace(function()
                     actions.close(prompt_bufnr)
@@ -238,19 +206,39 @@ local doMap = function()
 
     maps[#maps + 1] = {
         key = "gh",
-        fn = function() showHelps(tt.get_dropdown({
-                previewer = false,
-                layout_config = {
-                    -- display as more items as possible
-                    height = math.min(#helps + 4, vim.o.lines - 8),
-                }
-            }))
-        end,
+        fn = showHelps,
         group = "Finder", desc = "helps",
     }
+    reg(maps, {}, {})
+end
 
-    reg(maps, {})
+doMap0()
+
+-- doMap1 作和文件类型有关的 keymap
+local doMap1 = function()
+    if vim.bo.filetype == "NvimTree" then
+        nvimTree()
+        return
+    end
+
+    if vim.bo.filetype == "DiffviewFiles" then
+        dvf()
+        return
+    end
+
+    local i = 1
+    local keys = require("u.keys").random()
+    local helps = {}
+
+    for _, v in ipairs(keys) do
+        if v.key == nil then
+            v.key = "<leader><space>" .. alphas:sub(i, i)
+            i = i + 1
+            helps[#helps + 1] = v
+        end
+    end
+
     reg(helps, { ["<leader><space>"] = { name = "+helps" } })
 end
 
-sal["file-type"] = doMap
+sal["doMap1"] = doMap1

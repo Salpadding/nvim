@@ -6,7 +6,9 @@ if not ok then
     return
 end
 
-gs.setup({})
+gs.setup({
+      current_line_blame = true
+})
 
 
 ok, df = pcall(require, "diffview")

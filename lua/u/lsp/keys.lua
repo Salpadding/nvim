@@ -36,4 +36,8 @@ return {
     ["LSP diagnostic"] = { "gl", function()
         vim.diagnostic.open_float({ border = "rounded" })
     end },
+
+    ["LSP code actions"] = { "ga", function()
+        vim.lsp.buf.code_action()
+    end },
 }

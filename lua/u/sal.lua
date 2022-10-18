@@ -4,6 +4,7 @@ local finders = require "telescope.finders"
 local conf = require("telescope.config").values
 local action_state = require "telescope.actions.state"
 
+-- 执行 shell 命令, 返回标准输出
 local shell = function(s)
     local handle = io.popen(s)
     if handle == nil then
@@ -14,6 +15,7 @@ local shell = function(s)
     return result
 end
 
+-- diff 生成 diff telescope
 local diff = function(opts, src)
     local records = shell('git log --pretty=format:"%h %an %ar"'):gmatch("[^\r\n]+")
     local msgs = (function()
@@ -80,9 +82,13 @@ local diff = function(opts, src)
                         prev = es[i + 1]
                     end
                 end
-                vim.api.nvim_command(string.format(
-                    "DiffviewOpen %s..%s", prev, h
-                ))
+
+                prev = prev:match("^[0-9a-fA-F]+")
+                local cmd = string.format(
+                    "DiffviewOpen %s..%s", prev,h
+                )
+                print(cmd)
+                vim.api.nvim_command(cmd)
             end)
             return true
         end,
