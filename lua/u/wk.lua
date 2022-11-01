@@ -19,7 +19,6 @@ local fns = require("u.telescope")
 local isDir = sal.isDir
 
 sal["vim-enter"] = function()
-    local timer = vim.loop.new_timer()
     local buf = vim.fn.expand('%:p')
 
     -- open a file, do nothing
@@ -34,11 +33,6 @@ sal["vim-enter"] = function()
     -- change current working directory
     vim.api.nvim_command(string.format("cd %s", buf))
 
-    local tree = function()
-        timer:start(0, 0, vim.schedule_wrap(function()
-            vim.api.nvim_command "NvimTreeOpen"
-        end))
-    end
 
     local ok, m = pcall(require, "session_manager.utils")
 
@@ -46,8 +40,13 @@ sal["vim-enter"] = function()
     if ok then
         local name = m.dir_to_session_filename(buf)
         if name:exists() then
-            m.load_session(name.filename)
-            tree()
+            local timer = vim.loop.new_timer()
+            -- 休眠200毫秒等待其他插件加载
+            timer:start(200, 0, vim.schedule_wrap(function()
+                m.load_session(name.filename)
+                vim.api.nvim_command "NvimTreeOpen"
+            end))
+
             return
         end
     end
@@ -58,7 +57,11 @@ sal["vim-enter"] = function()
         vim.api.nvim_command "Alpha"
     end
 
-    tree()
+    local timer = vim.loop.new_timer()
+    -- 休眠200毫秒等待其他插件加载
+    timer:start(200, 0, vim.schedule_wrap(function()
+        vim.api.nvim_command "NvimTreeOpen"
+    end))
 end
 
 local ok, wk = pcall(require, "which-key")

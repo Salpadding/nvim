@@ -39,11 +39,11 @@ local on_attach = function(client, bufnr)
 end
 
 -- setup capabilities
-local capabilities = vim.lsp.protocol.make_client_capabilities()
+local capabilities
 
 ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 if ok then
-    capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+    capabilities = cmp_nvim_lsp.default_capabilities()
 else
     print("cmp_nvim_lsp not installed")
 end
