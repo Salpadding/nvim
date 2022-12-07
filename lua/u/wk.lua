@@ -14,7 +14,6 @@ vim.cmd [[
 local sal = require("u.sal")
 local tt = require('telescope.themes')
 local actions = require "telescope.actions"
-local fns = require("u.telescope")
 
 local isDir = sal.isDir
 

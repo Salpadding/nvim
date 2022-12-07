@@ -1,6 +1,6 @@
 local opts = {
     on_attach = function(client)
-        -- client.stop()
+        client.stop()
     end
 }
 return opts
