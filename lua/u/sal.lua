@@ -106,6 +106,16 @@ local fns = {
 
     shell = shell,
 
+    yank = function()
+        local content = vim.fn.getreg('+')
+        local handle = io.popen('/usr/bin/ssh -o StrictHostKeyChecking=no "sal@sal.rs" pbcopy', 'w')
+        if handle == nil then
+            return ""
+        end
+        handle:write(vim.fn.getreg('+'))
+        handle:close()
+    end,
+
     diff = diff,
     gerrit = function(opts)
         local result = shell("git review -l -r origin")

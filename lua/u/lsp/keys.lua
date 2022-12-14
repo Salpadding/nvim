@@ -26,6 +26,7 @@ return {
     end },
     ["LSP format buf"] = { "=", function()
         vim.lsp.buf.formatting()
+        vim.cmd("LspRestart")
     end },
     ["LSP hover"] = { "K", function()
         vim.lsp.buf.hover()

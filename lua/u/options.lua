@@ -4,7 +4,7 @@ local options = {
     -- while editing with another program), it is not allowed to be edited
     swapfile = false, -- disable swapfile
 
-    clipboard = "unnamedplus", -- allows neovim to access the system clipboard
+    clipboard = {"unnamed", "unnamedplus"}, -- allows neovim to access the system clipboard
     completeopt = { "menu", "menuone", "noselect" }, -- mostly just for cmp
     conceallevel = 0, -- so that `` is visible in markdown files
     fileencoding = "utf-8", -- the encoding written to a file

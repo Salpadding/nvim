@@ -8,6 +8,7 @@ vim.cmd [[
         au FileType * :lua Sal("doMap1")
         au BufNewFile,BufRead *.gop set filetype=go
         au BufNewFile,BufRead gop.mod set filetype=gomod
+        au TextYankPost * :lua Sal("yank")
     augroup end
 ]]
 
