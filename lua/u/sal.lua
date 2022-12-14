@@ -97,13 +97,46 @@ end
 
 -- TIPS: 使用 hammerspoon 实现剪贴板同步
 if hs ~= nil then
-    -- 以下代码加到 .hammerspoon/init.lua
-    local cb = function(contents)
+-- if then end 中的代码复制到 ~/.hammerspoon/init.lua
+
+local shell = function(s)
+    local handle = io.popen(s)
+    if handle == nil then
+        return ""
+    end
+    local result = handle:read("*a")
+    handle:close()
+    return result
+end
+
+local remote_clip = ''
+
+local sync_clip = function()
+    remote_clip = shell('LANG=en_US.UTF-8 ssh -o StrictHostKeyChecking=no arch@arch.rs "DISPLAY=:0 xsel -bo"')
+end
+
+hs.timer.new(
+    0.5, 
+    function()
+        local before = remote_clip
+        sync_clip()
+        if remote_clip ~= nil and remote_clip ~= '' and remote_clip ~= before then
+            hs.pasteboard.setContents(remote_clip)
+        end
+    end
+):start()
+
+hs.pasteboard.watcher.new(
+    function(contents)
+        if contents == remote_clip then
+            return
+        end
         local p = io.popen('ssh -o StrictHostKeyChecking=no arch@arch.rs "DISPLAY=:0 xsel -bi"', 'w')
         p:write(contents)
         p:close()
     end
-    hs.pasteboard.watcher.new(cb)
+)
+
 end
 
 local fns = {
@@ -118,13 +151,6 @@ local fns = {
     shell = shell,
 
     yank = function()
-        local content = vim.fn.getreg('+')
-        local handle = io.popen('/usr/bin/ssh -o StrictHostKeyChecking=no "sal@sal.rs" "LANG=en_US.UTF-8 pbcopy"', 'w')
-        if handle == nil then
-            return ""
-        end
-        handle:write(vim.fn.getreg('+'))
-        handle:close()
     end,
 
     diff = diff,
