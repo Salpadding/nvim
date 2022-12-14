@@ -95,6 +95,17 @@ local diff = function(opts, src)
     }):find()
 end
 
+-- TIPS: 使用 hammerspoon 实现剪贴板同步
+if hs ~= nil then
+    -- 以下代码加到 .hammerspoon/init.lua
+    local cb = function(contents)
+        local p = io.popen('ssh -o StrictHostKeyChecking=no arch@arch.rs "DISPLAY=:0 xsel -bi"', 'w')
+        p:write(contents)
+        p:close()
+    end
+    hs.pasteboard.watcher.new(cb)
+end
+
 local fns = {
     isDir = function(s)
         local fd = vim.loop.fs_open(s, "r", 438)
@@ -108,7 +119,7 @@ local fns = {
 
     yank = function()
         local content = vim.fn.getreg('+')
-        local handle = io.popen('/usr/bin/ssh -o StrictHostKeyChecking=no "sal@sal.rs" pbcopy', 'w')
+        local handle = io.popen('/usr/bin/ssh -o StrictHostKeyChecking=no "sal@sal.rs" "LANG=en_US.UTF-8 pbcopy"', 'w')
         if handle == nil then
             return ""
         end
