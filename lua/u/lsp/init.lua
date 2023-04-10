@@ -5,6 +5,7 @@ if not ok then
     return
 end
 
+
 ok, ins = pcall(require, "nvim-lsp-installer")
 
 if not ok then
@@ -37,6 +38,13 @@ local on_attach = function(client, bufnr)
             ]]
     end
 end
+
+require'lspconfig'.ccls.setup{
+    on_attach = on_attach
+}
+require'lspconfig'.gopls.setup{
+    on_attach = on_attach
+}
 
 -- setup capabilities
 local capabilities

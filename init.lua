@@ -23,3 +23,5 @@ require "u.color"
 require "u.neotest"
 require "u.trouble"
 require "u.notify"
+require "u.cs"
+

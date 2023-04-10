@@ -157,7 +157,7 @@ return packer.startup(function(use)
     use "norcalli/nvim-colorizer.lua"
 
     -- notify
-    use "rcarriga/nvim-notify"
+    -- use "rcarriga/nvim-notify"
     use {
         "folke/trouble.nvim",
         requires = "kyazdani42/nvim-web-devicons",
