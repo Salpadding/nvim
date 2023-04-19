@@ -32,30 +32,9 @@ sal["vim-enter"] = function()
 
     -- change current working directory
     vim.api.nvim_command(string.format("cd %s", buf))
+    vim.api.nvim_command "SessionManager load_current_dir_session"
+    
 
-
-    local ok, m = pcall(require, "session_manager.utils")
-
-    -- try to load session
-    if ok then
-        local name = m.dir_to_session_filename(buf)
-        if name:exists() then
-            local timer = vim.loop.new_timer()
-            -- 休眠200毫秒等待其他插件加载
-            timer:start(200, 0, vim.schedule_wrap(function()
-                m.load_session(name.filename)
-                vim.api.nvim_command "NvimTreeOpen"
-            end))
-
-            return
-        end
-    end
-
-    m.is_session = true
-    -- if alpha is not active, open
-    if vim.bo.filetype ~= "alpha" then
-        vim.api.nvim_command "Alpha"
-    end
 
     local timer = vim.loop.new_timer()
     -- 休眠200毫秒等待其他插件加载

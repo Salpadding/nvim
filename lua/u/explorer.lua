@@ -10,7 +10,6 @@ local defaultSize = 20
 local custom = function(opts)
     return {
         hijack_netrw = false,
-        open_on_setup = false,
         diagnostics = {
             enable = true,
             show_on_dirs = true,
@@ -21,14 +20,7 @@ local custom = function(opts)
         },
         view = {
             width = defaultSize,
-            mappings = {
-                list = {
-                    { key = { "l", "<CR>", "o" }, action = "edit" },
-                    { key = "h", action = "close_node" },
-                },
-            },
         },
-        ignore_ft_on_setup = { "alpha" },
         actions = {
             change_dir = {
                 enable = false
@@ -37,6 +29,15 @@ local custom = function(opts)
                 resize_window = false
             }
         },
+        on_attach = function(bufnr)
+            local api = require('nvim-tree.api')
+            local function opts(desc)
+                return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+            end
+
+            vim.keymap.set('n', 'l',  api.node.open.edit, opts('Open'))
+
+        end, 
         renderer = {
             icons = {
                 glyphs = {

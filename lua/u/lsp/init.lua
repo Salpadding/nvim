@@ -39,13 +39,6 @@ local on_attach = function(client, bufnr)
     end
 end
 
-require'lspconfig'.ccls.setup{
-    on_attach = on_attach
-}
-require'lspconfig'.gopls.setup{
-    on_attach = on_attach
-}
-
 -- setup capabilities
 local capabilities
 
@@ -57,16 +50,17 @@ else
 end
 
 
-ins.on_server_ready(
-    function(s)
+local on_server_ready = function(s)
     local o, opts = pcall(require, "u.lsp.settings." .. s.name)
     if not o then
+        print(s.name)
         opts = {}
     end
 
     local fn = on_attach
     if opts.on_attach then
         local sub = opts.on_attach
+        -- client, bufnr
         fn = function(c, b)
             sub(c, b)
             on_attach(c, b)
@@ -76,7 +70,23 @@ ins.on_server_ready(
     opts.capabilities = capabilities
     s:setup(opts)
 end
+
+ins.on_server_ready(
+    on_server_ready
 )
+
+local add_lsp = function(s)
+    local o = {
+        setup = function(this, opts)
+            this.setup(opts)
+        end
+    }
+end
+
+add_lsp(require'lspconfig'.ccls)
+add_lsp(require'lspconfig'.gopls)
+add_lsp(require'lspconfig'.rust_analyzer)
+add_lsp(require'lspconfig'.lua_ls)
 
 -- setup null-ls
 require "u.lsp.nl"
