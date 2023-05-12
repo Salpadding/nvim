@@ -29,7 +29,7 @@ local on_attach = function(client, bufnr)
     -- Set autocommands conditional on server_capabilities
     if client.server_capabilities.document_highlight then
         vim.cmd
-            [[
+        [[
               augroup lsp_document_highlight
                 autocmd! * <buffer>
                 autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
@@ -50,10 +50,11 @@ else
 end
 
 
+-- lsp installer 懒加载
 local on_server_ready = function(s)
+-- 加载配置 u/lsp/settings/xxx.lua
     local o, opts = pcall(require, "u.lsp.settings." .. s.name)
     if not o then
-        print(s.name)
         opts = {}
     end
 
@@ -78,15 +79,18 @@ ins.on_server_ready(
 local add_lsp = function(s)
     local o = {
         setup = function(this, opts)
-            this.setup(opts)
-        end
+            s.setup(opts)
+        end,
+        name = s.name,
     }
+    on_server_ready(o)
 end
 
-add_lsp(require'lspconfig'.ccls)
-add_lsp(require'lspconfig'.gopls)
-add_lsp(require'lspconfig'.rust_analyzer)
-add_lsp(require'lspconfig'.lua_ls)
+add_lsp(require 'lspconfig'.ccls)
+add_lsp(require 'lspconfig'.gopls)
+add_lsp(require 'lspconfig'.rust_analyzer)
+add_lsp(require 'lspconfig'.lua_ls)
+add_lsp(require 'lspconfig'.pyright)
 
 -- setup null-ls
 require "u.lsp.nl"

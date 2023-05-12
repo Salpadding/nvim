@@ -7,7 +7,7 @@ end
 
 local defaultSize = 20
 
-local custom = function(opts)
+local custom = function()
     return {
         hijack_netrw = false,
         diagnostics = {
@@ -35,9 +35,9 @@ local custom = function(opts)
                 return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
             end
 
-            vim.keymap.set('n', 'l',  api.node.open.edit, opts('Open'))
-
-        end, 
+            vim.keymap.set('n', 'l', api.node.open.edit, opts('Open'))
+            vim.keymap.set('n', 'a', api.fs.create, opts('Create'))
+        end,
         renderer = {
             icons = {
                 glyphs = {

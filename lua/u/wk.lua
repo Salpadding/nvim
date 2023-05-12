@@ -6,8 +6,6 @@ vim.cmd [[
         autocmd!
         au VimEnter * :lua Sal("vim-enter")
         au FileType * :lua Sal("doMap1")
-        au BufNewFile,BufRead *.gop set filetype=go
-        au BufNewFile,BufRead gop.mod set filetype=gomod
         au TextYankPost * :lua Sal("yank")
     augroup end
 ]]
@@ -33,7 +31,7 @@ sal["vim-enter"] = function()
     -- change current working directory
     vim.api.nvim_command(string.format("cd %s", buf))
     vim.api.nvim_command "SessionManager load_current_dir_session"
-    
+
 
 
     local timer = vim.loop.new_timer()
@@ -91,17 +89,17 @@ local nvimTree = function()
     local mp = vim.api.nvim_buf_set_keymap
     local maps =
     {
-        { desc = "cd in directory(C-])", fn = "<C-]>" },
-        { desc = "toggle git ignored(I)", fn = "I" },
-        { desc = "toggle dot files(H)", fn = "H" },
-        { desc = "cut (x)", fn = "x" },
-        { desc = "copy (c)", fn = "c" },
-        { desc = "paste (p)", fn = "p" },
-        { desc = "copy name (y)", fn = "y" },
-        { desc = "copy path (Y)", fn = "Y" },
+        { desc = "cd in directory(C-])",    fn = "<C-]>" },
+        { desc = "toggle git ignored(I)",   fn = "I" },
+        { desc = "toggle dot files(H)",     fn = "H" },
+        { desc = "cut (x)",                 fn = "x" },
+        { desc = "copy (c)",                fn = "c" },
+        { desc = "paste (p)",               fn = "p" },
+        { desc = "copy name (y)",           fn = "y" },
+        { desc = "copy path (Y)",           fn = "Y" },
         { desc = "copy absolute path (gy)", fn = "gy" },
-        { desc = "collapse all(W)", fn = "W" },
-        { desc = "toggle file info(C-k)", fn = "<C-k>" },
+        { desc = "collapse all(W)",         fn = "W" },
+        { desc = "toggle file info(C-k)",   fn = "<C-k>" },
     }
 
     for _, v in ipairs(maps) do
@@ -118,13 +116,13 @@ local dvf = function()
     local mp = vim.api.nvim_buf_set_keymap
     local maps =
     {
-        { desc = "toggle stage(-)", fn = "-" },
-        { desc = "stage all(S)", fn = "S" },
-        { desc = "unstage all(U)", fn = "U" },
-        { desc = "restore(X)", fn = "X" },
-        { desc = "refresh files(R)", fn = "R" },
+        { desc = "toggle stage(-)",    fn = "-" },
+        { desc = "stage all(S)",       fn = "S" },
+        { desc = "unstage all(U)",     fn = "U" },
+        { desc = "restore(X)",         fn = "X" },
+        { desc = "refresh files(R)",   fn = "R" },
         { desc = "open commit log(L)", fn = "L" },
-        { desc = "go to file(gf)", fn = "gf" },
+        { desc = "go to file(gf)",     fn = "gf" },
     }
 
     for _, v in ipairs(maps) do
@@ -189,7 +187,8 @@ local doMap0 = function()
     maps[#maps + 1] = {
         key = "gh",
         fn = showHelps,
-        group = "Finder", desc = "helps",
+        group = "Finder",
+        desc = "helps",
     }
     reg(maps, {}, {})
 end

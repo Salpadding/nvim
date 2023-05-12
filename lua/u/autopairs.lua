@@ -1,11 +1,17 @@
 local ok, ap, cmp
 ok, ap = pcall(require, "nvim-autopairs")
 
-if not ok then print("autopairs not installed"); return end
+if not ok then
+    print("autopairs not installed");
+    return
+end
 
 ok, cmp = pcall(require, "cmp")
 
-if not ok then print("cmp not installed"); return end
+if not ok then
+    print("cmp not installed");
+    return
+end
 
 ap.setup({
     -- check treesitter

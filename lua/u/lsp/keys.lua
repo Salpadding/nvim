@@ -25,7 +25,7 @@ return {
         tb.diagnostics({ bufnr = 0, layout_config = { width = 0.99 } })
     end },
     ["LSP format buf"] = { "=", function()
-        vim.lsp.buf.formatting()
+        vim.lsp.buf.format()
         vim.cmd("LspRestart")
     end },
     ["LSP hover"] = { "K", function()

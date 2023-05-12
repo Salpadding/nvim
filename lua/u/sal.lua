@@ -85,7 +85,7 @@ local diff = function(opts, src)
 
                 prev = prev:match("^[0-9a-fA-F]+")
                 local cmd = string.format(
-                    "DiffviewOpen %s..%s", prev,h
+                    "DiffviewOpen %s..%s", prev, h
                 )
                 print(cmd)
                 vim.api.nvim_command(cmd)
@@ -93,50 +93,6 @@ local diff = function(opts, src)
             return true
         end,
     }):find()
-end
-
--- TIPS: 使用 hammerspoon 实现剪贴板同步
-if hs ~= nil then
--- if then end 中的代码复制到 ~/.hammerspoon/init.lua
-
-local shell = function(s)
-    local handle = io.popen(s)
-    if handle == nil then
-        return ""
-    end
-    local result = handle:read("*a")
-    handle:close()
-    return result
-end
-
-local remote_clip = ''
-
-local sync_clip = function()
-    remote_clip = shell('LANG=en_US.UTF-8 ssh -o StrictHostKeyChecking=no arch@arch.rs "DISPLAY=:0 xsel -bo"')
-end
-
-hs.timer.new(
-    0.5, 
-    function()
-        local before = remote_clip
-        sync_clip()
-        if remote_clip ~= nil and remote_clip ~= '' and remote_clip ~= before then
-            hs.pasteboard.setContents(remote_clip)
-        end
-    end
-):start()
-
-hs.pasteboard.watcher.new(
-    function(contents)
-        if contents == remote_clip then
-            return
-        end
-        local p = io.popen('ssh -o StrictHostKeyChecking=no arch@arch.rs "DISPLAY=:0 xsel -bi"', 'w')
-        p:write(contents)
-        p:close()
-    end
-)
-
 end
 
 local fns = {
@@ -147,12 +103,9 @@ local fns = {
         vim.loop.fs_close(fd)
         return stat.type == "directory"
     end,
-
     shell = shell,
-
     yank = function()
     end,
-
     diff = diff,
     gerrit = function(opts)
         local result = shell("git review -l -r origin")
