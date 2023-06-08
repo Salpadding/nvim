@@ -65,4 +65,4 @@ local custom = function()
     }
 end
 
-tree.setup(custom({}))
+tree.setup(custom())
