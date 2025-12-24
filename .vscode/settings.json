@@ -1,0 +1,13 @@
+{
+    // Neovim runtime
+    "Lua.workspace.library": [
+        "/opt/homebrew/opt/neovim/share/nvim/runtime",
+        "$HOME/.local/share/nvim",
+        "$HOME/.local/share/nvim/lazy/lazy.nvim",
+    ],
+    "Lua.workspace.checkThirdParty": false,
+    "Lua.runtime.version": "Lua 5.1",
+    "[lua]": {
+        "editor.formatOnSave": true
+    }
+}
