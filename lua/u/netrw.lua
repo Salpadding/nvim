@@ -1,27 +1,21 @@
 local defaults = require "u.defaults"
 local utils = require "u.utils"
 
+-- netrw is disabled early in init.lua when nvim_tree is enabled
+-- This file only sets up netrw config when not using nvim-tree
 
-local function disable_net_rw()
-    print("disable netrw")
-    vim.g.loaded_netrw = 1
-    vim.g.loaded_netrwPlugin = 1
-end
-
-vim.api.nvim_create_autocmd({ 'FileType' }, {
-    callback = function(data)
-        if utils.buf.get_opt(data.buf, "filetype") ~= "netrw" then return end
-        vim.cmd [[
+if not defaults.options.nvim_tree then
+    vim.api.nvim_create_autocmd({ 'FileType' }, {
+        callback = function(data)
+            if utils.buf.get_opt(data.buf, "filetype") ~= "netrw" then return end
+            vim.cmd [[
 nn <buffer> <C-l> <C-w>l
 nmap <buffer> l v
 nmap <buffer> d <Del>
 ]]
-    end
-})
+        end
+    })
 
-if defaults.options.nvim_tree then
-    disable_net_rw()
-else
     vim.g.netrw_liststyle = 3
     vim.g.netrw_browse_split = 2
     vim.g.netrw_banner = 0

@@ -1,4 +1,21 @@
+local defaults = require "u.defaults"
 local utils = require "u.utils"
+
+-- Disable netrw early if using nvim-tree (must be before any plugins load)
+if defaults.options.nvim_tree then
+    vim.g.loaded_netrw = 1
+    vim.g.loaded_netrwPlugin = 1
+end
+
+-- global options
+vim.cmd.source(
+    vim.fs.joinpath(
+        vim.fn.stdpath("config"),
+        "opts.vim"
+    )
+)
+
+require "u.lazy"
 
 vim.api.nvim_set_keymap("n", "q", "", {
     noremap = true,
@@ -22,37 +39,7 @@ vim.iter({ "n", "t" }):each(
 )
 
 
--- global options
-vim.cmd.source(
-    vim.fs.joinpath(
-        vim.fn.stdpath("config"),
-        "opts.vim"
-    )
-)
 
--- override ftplugin defaults
--- PREFIX=/opt/homebrew/Cellar/neovim/0.10.0/share/nvim
--- such as $PREFIX/runtime/ftplugin, $PREFIX/runtime/indent, $PREFIX/runtime/syntax, $PREFIX/runtime/autoload
-
--- install lazy, a plugin manager
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not utils.bool(vim.uv.fs_stat(lazypath)) then
-    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-    vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-end
-
--- add lazy to neovim runtime path, so we can require "lazy"
-vim.opt.rtp:prepend(lazypath)
-
--- let lazy load plugins from disk
-local lazy = require("lazy")
-lazy.setup({
-  spec = {
-    -- import your plugins
-    { import = "plugins" },
-  },
-  lockfile = vim.fn.stdpath("data") .. "/lazy/lazy-lock.json"
-})
 
 -- autocommands
 require "u.au"

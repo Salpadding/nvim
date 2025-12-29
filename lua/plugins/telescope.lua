@@ -8,12 +8,12 @@ local function setup()
         return
     end
 
-    -- telescope 中不区分 input 和 normal 模式
+    -- telescope not distinguish between input and normal mode
     telescope.setup {
         defaults = {
             mappings = {
                 i = {
-                    -- tab 选中
+                    -- tab select
                     ["<Tab>"] = actions.select_default,
                     ["<C-j>"] = actions.move_selection_next,
                     ["<C-k>"] = actions.move_selection_previous,
@@ -72,7 +72,6 @@ end
 
 return {
     'nvim-telescope/telescope.nvim',
-    tag = '0.1.8',
     event = "VeryLazy",
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = setup

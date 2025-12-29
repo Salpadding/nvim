@@ -1,5 +1,5 @@
 local M = {
-    -- fp 用于函数式编程
+    -- fp, for functional programming
     fp = {
         id = function(x) return x end,
 
@@ -39,7 +39,10 @@ local M = {
             local a = require "plenary.async"
             local err, fd, stat, data
             err, fd = a.uv.fs_open(path, "r", 438)
-            if err then return end
+            if err then
+                a.uv.fs_close(fd)
+                return
+            end
 
             err, stat = a.uv.fs_fstat(fd)
             if err or stat.type ~= "file" then return end
@@ -51,7 +54,8 @@ local M = {
         end,
 
         is_file = function(path)
-            local a = require "plenary.async"
+            if not pasync then return false end
+            local a = pasync
             local err, stat = a.uv.fs_stat(path)
             if err then return false end
             return stat and stat.type == "file"

@@ -36,7 +36,7 @@ local auto_save = {
                 utils.buf.save(bufnr)
             end
         end
-        for bufnr, last in ipairs(self.buffers) do
+        for bufnr, last in pairs(self.buffers) do
             body(bufnr, last)
         end
     end
