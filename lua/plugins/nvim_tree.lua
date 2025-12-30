@@ -18,9 +18,9 @@ local M = {
     opts = {
         sync_root_with_cwd = true,
         hijack_cursor = true,
+        -- 仅在 nvimtree 所在的 buffer 生效
         on_attach = function(bufnr)
             local api = require "nvim-tree.api"
-            -- 仅在 nvimtree 所在的 buffer 生效
             local function opts(desc)
                 return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
             end

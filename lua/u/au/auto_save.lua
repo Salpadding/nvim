@@ -25,13 +25,13 @@ local auto_save = {
         local body = function(bufnr, last)
             --- Buffers can become invalid if they are deleted, unloaded, or otherwise no longer exist in the editor.
             if not utils.buf.is_valid(bufnr) then
-                table.remove(self.buffers, bufnr)
+                self.buffers[bufnr] = nil
                 return
             end
             if not utils.buf.get_opt(bufnr, "modified") then
                 return
             end
-            if last ~= nil and os.time() - (self.debounce / 1000) > last then
+            if last ~= nil and os.time() - last > (self.debounce / 1000) then
                 self.buffers[bufnr] = nil
                 utils.buf.save(bufnr)
             end

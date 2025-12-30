@@ -1,6 +1,8 @@
 -- ~/.config/nvim/lua/plugins/lsp.lua
 return {
-  dir = vim.fn.stdpath("config") .. "/lua/projects/lsp",
+  -- because lsp config is moved to vim.lsp.config, we will leave a dummy dependency here, 
+  -- so that lazy will not throw error
+  "neovim/nvim-lspconfig",
   event = "VeryLazy",
   dependencies = { "hrsh7th/cmp-nvim-lsp" },
   config = function()

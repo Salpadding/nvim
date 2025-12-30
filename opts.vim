@@ -6,10 +6,14 @@ set expandtab tabstop=4 shiftwidth=4
 " disable .swp file, enable undo local logs
 set noswapfile undofile
 set signcolumn=yes scrolloff=32 colorcolumn=120
+
+" 
+" - Without it: This is a long sen|tence (breaks anywhere)
+" - With it: This is a long |sentence (breaks at spaces/punctuation)
 set wrap nofoldenable linebreak
 " fix statusline and tabline
 set laststatus=3 showtabline=2
-"let :vs :sp open new window right/below
+" let :vs :sp open new window right/below
 set splitright splitbelow
 set timeoutlen=3000 ttimeoutlen=1
 set cursorline nofileignorecase
@@ -29,3 +33,4 @@ command -nargs=* -complete=help H :vert help <args>
 " command line abbrev :h -> :H
 cabbrev h H
 au TermOpen * startinsert
+
