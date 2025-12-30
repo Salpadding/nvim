@@ -7,5 +7,6 @@ return {
     },
     options = {
         nvim_tree = true,
-    }
+    },
+    jdtls_java_home = "/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
 }

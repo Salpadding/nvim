@@ -21,6 +21,7 @@ return {
         require(main).setup(opts)
         vim.cmd [[
             set foldmethod=expr foldexpr=nvim_treesitter#foldexpr()
+            set foldlevel=99
             ]]
         vim.treesitter.query.set("printf", "highlights", "(format) @keyword")
     end
