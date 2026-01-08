@@ -8,15 +8,16 @@ if defaults.options.nvim_tree then
 end
 
 -- configure clipboard
+-- OSC 52 for copy (works through tmux), pbpaste for paste (OSC 52 paste is often unsupported)
 vim.g.clipboard = {
-  name = 'OSC 52',
+  name = 'OSC 52 + pbpaste',
   copy = {
     ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
     ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
   },
   paste = {
-    ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
-    ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+    ['+'] = function() return vim.fn.systemlist('pbpaste') end,
+    ['*'] = function() return vim.fn.systemlist('pbpaste') end,
   },
 }
 

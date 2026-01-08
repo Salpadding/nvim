@@ -29,6 +29,9 @@ local auto_save = {
                 return
             end
             if not utils.buf.get_opt(bufnr, "modified") then
+                -- Use checktime instead of :e - only reloads if file changed on disk
+                vim.api.nvim_buf_call(bufnr, function() vim.cmd("checktime") end)
+                self.buffers[bufnr] = nil  -- Remove from tracking since not modified
                 return
             end
             if last ~= nil and os.time() - last > (self.debounce / 1000) then
